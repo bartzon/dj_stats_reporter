@@ -21,6 +21,10 @@ module DjStats
         send_job :put, attrs, job.id
         job
       end
+      
+      def reschedule_job(job)
+        send_job :put, parse_job_attributes(job), job.id
+      end
     
       private
         def send_job(method, attrs, id=nil)

@@ -39,7 +39,6 @@ describe Delayed::Job do
     end
     
     it "should start a job correctly" do
-
       DjStats::Reporter.should_receive(:start_job).with(@job)
       do_run
     end
@@ -47,6 +46,22 @@ describe Delayed::Job do
     it "should end a job correctly" do      
       DjStats::Reporter.should_receive(:end_job).with(@job)
       do_run
+    end
+  end
+  
+  describe "rescheduling jobs" do
+    before(:each) do
+      @job.stub!(:reschedule_without_stats)
+      DjStats::Reporter.stub!(:reschedule_job)
+    end
+    
+    def do_reschedule
+      @job.reschedule('message')
+    end
+    
+    it "should reschedule a job correctly" do
+      DjStats::Reporter.should_receive(:reschedule_job).with(@job)
+      do_reschedule
     end
   end
 end

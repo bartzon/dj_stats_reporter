@@ -16,5 +16,11 @@ module Delayed
         DjStats::Reporter.end_job(self)
       end
     end
+    
+    alias_method :reschedule_without_stats, :reschedule
+    def reschedule(message, backtrace = [], time = nil)
+      reschedule_without_stats(message, backtrace, time)
+      DjStats::Reporter.reschedule_job(self)
+    end
   end
 end

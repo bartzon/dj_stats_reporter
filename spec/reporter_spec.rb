@@ -93,4 +93,11 @@ describe DjStats::Reporter do
       do_end.should == @job
     end
   end
+
+  describe "rescheduling a job" do
+    it "should call the correct method with the correct attributes" do
+      DjStats::Reporter.should_receive(:put).with("http://localhost:3000/3", :body => {:job => @attrs})
+      DjStats::Reporter.reschedule_job(@job)
+    end
+  end
 end
