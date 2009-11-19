@@ -11,23 +11,22 @@ module DjStats
       def start_job(job)
         attrs = parse_job_attributes(job)
         attrs.merge!(:started_at => Time.now.utc)
-        send_job :put, attrs
+        send_job :put, attrs, job.id
       end
     
       def end_job(job)
         attrs = parse_job_attributes(job)
         attrs.merge!(:ended_at => Time.now.utc)
-        send_job :put, attrs
+        send_job :put, attrs, job.id
       end
     
       private
-        def send_job(method, attrs)
-          url = DjStats::Config.stats_url
-          case method
-            when :post
-              post url, :body => {:job => attrs}
-            when :put
-              put "#{url}/#{job.id}", :body => {:job => attrs}
+        def send_job(method, attrs, id=nil)
+          url = [DjStats::Config.stats_url, id].join("/")
+          begin
+            send method, url, :body => {:job => attrs}
+          rescue => e
+            raise DjStats::Error.new(e.message)
           end
         end
         
