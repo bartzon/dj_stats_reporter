@@ -47,22 +47,23 @@ describe Delayed::Job do
       DjStats::Reporter.should_receive(:end_job).with(@job)
       do_run
     end
+    
+    it "should reschedule a job correctly" do
+      @job.stub!(:run_with_lock_without_stats).and_return false
+      DjStats::Reporter.should_receive(:reschedule_job).with(@job)
+      do_run
+    end
+
   end
   
-  describe "rescheduling jobs" do
+  describe "failing jobs" do
     before(:each) do
       @job.stub!(:reschedule_without_stats)
-      DjStats::Reporter.stub!(:reschedule_job)
       DjStats::Reporter.stub!(:fail_job)
     end
     
     def do_reschedule
       @job.reschedule('message')
-    end
-    
-    it "should reschedule a job correctly" do
-      DjStats::Reporter.should_receive(:reschedule_job).with(@job)
-      do_reschedule
     end
     
     it "should fail a job if DJ deleted it" do

@@ -5,6 +5,7 @@ module DjStats
     class << self
       def register_job(job)
         send_job :post, parse_job_attributes(job)
+        puts "Registering #{job.id}"
         job
       end
 
@@ -12,13 +13,15 @@ module DjStats
         attrs = parse_job_attributes(job)
         attrs.merge!(:started_at => Time.now.utc)
         send_job :put, attrs, job.id
+        puts "Starting #{job.id}"
         job
       end
     
       def end_job(job)
         attrs = parse_job_attributes(job)
         attrs.merge!(:ended_at => Time.now.utc)
-        send_job :put, attrs, job.id
+        send_job :delete, attrs, job.id
+        puts "deleteing #{job.id}"
         job
       end
       
@@ -26,6 +29,8 @@ module DjStats
         attrs = parse_job_attributes(job)
         attrs.merge!(:started_at => nil)
         send_job :put, attrs, job.id
+        puts "Rescheduling #{job.id}"
+        job
       end
       
       def fail_job(job)
@@ -33,6 +38,8 @@ module DjStats
         attrs.merge!(:ended_at => Time.now.utc)
         attrs.merge!(:failed_at => Time.now.utc)
         send_job :put, attrs, job.id
+        puts "Failing #{job.id}"
+        job
       end
     
       private
