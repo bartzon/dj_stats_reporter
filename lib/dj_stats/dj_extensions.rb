@@ -20,7 +20,11 @@ module Delayed
     alias_method :reschedule_without_stats, :reschedule
     def reschedule(message, backtrace = [], time = nil)
       reschedule_without_stats(message, backtrace, time)
-      DjStats::Reporter.reschedule_job(self)
+      if frozen? || failed_at
+        DjStats::Reporter.fail_job(self)
+      else
+        DjStats::Reporter.reschedule_job(self)
+      end
     end
   end
 end

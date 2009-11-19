@@ -27,6 +27,13 @@ module DjStats
         attrs.merge!(:started_at => nil)
         send_job :put, attrs, job.id
       end
+      
+      def fail_job(job)
+        attrs = parse_job_attributes(job)
+        attrs.merge!(:ended_at => Time.now.utc)
+        attrs.merge!(:failed_at => Time.now.utc)
+        send_job :put, attrs, job.id
+      end
     
       private
         def send_job(method, attrs, id=nil)

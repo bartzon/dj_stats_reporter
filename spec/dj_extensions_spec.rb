@@ -53,6 +53,7 @@ describe Delayed::Job do
     before(:each) do
       @job.stub!(:reschedule_without_stats)
       DjStats::Reporter.stub!(:reschedule_job)
+      DjStats::Reporter.stub!(:fail_job)
     end
     
     def do_reschedule
@@ -61,6 +62,18 @@ describe Delayed::Job do
     
     it "should reschedule a job correctly" do
       DjStats::Reporter.should_receive(:reschedule_job).with(@job)
+      do_reschedule
+    end
+    
+    it "should fail a job if DJ deleted it" do
+      @job.stub!(:frozen?).and_return true
+      DjStats::Reporter.should_receive(:fail_job).with(@job)
+      do_reschedule
+    end
+
+    it "should fail a job if DJ has set failed_at" do
+      @job.stub!(:failed_at).and_return true
+      DjStats::Reporter.should_receive(:fail_job).with(@job)
       do_reschedule
     end
   end

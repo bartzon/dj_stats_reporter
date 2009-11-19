@@ -96,8 +96,24 @@ describe DjStats::Reporter do
 
   describe "rescheduling a job" do
     it "should call the correct method with the correct attributes" do
-      DjStats::Reporter.should_receive(:put).with("http://localhost:3000/3", :body => {:job => @attrs})
+      attrs = @attrs.dup.merge!(:started_at => nil)
+      DjStats::Reporter.should_receive(:put).with("http://localhost:3000/3", :body => {:job => attrs})
       DjStats::Reporter.reschedule_job(@job)
+    end
+  end
+  
+  describe "failing a job" do
+    before(:each) do
+      @t = Time.utc(2009,1,1)
+      Time.stub!(:now).and_return @t
+    end
+    
+    it "should call the correct method with the correct attributes" do
+      attrs = @attrs.dup
+      attrs.merge!(:ended_at => @t)
+      attrs.merge!(:failed_at => @t)
+      DjStats::Reporter.should_receive(:put).with("http://localhost:3000/3", :body => {:job => attrs})
+      DjStats::Reporter.fail_job(@job)
     end
   end
 end
