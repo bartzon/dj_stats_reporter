@@ -12,12 +12,14 @@ module DjStats
         attrs = parse_job_attributes(job)
         attrs.merge!(:started_at => Time.now.utc)
         send_job :put, attrs, job.id
+        job
       end
     
       def end_job(job)
         attrs = parse_job_attributes(job)
         attrs.merge!(:ended_at => Time.now.utc)
         send_job :put, attrs, job.id
+        job
       end
     
       private
