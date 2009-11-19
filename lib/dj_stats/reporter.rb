@@ -23,7 +23,9 @@ module DjStats
       end
       
       def reschedule_job(job)
-        send_job :put, parse_job_attributes(job), job.id
+        attrs = parse_job_attributes(job)
+        attrs.merge!(:started_at => nil)
+        send_job :put, attrs, job.id
       end
     
       private
