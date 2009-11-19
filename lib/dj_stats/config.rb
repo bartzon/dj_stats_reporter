@@ -1,10 +1,6 @@
 module DjStats
-  module Config
-    def self.included(klass)
-      klass.send :extend, ClassMethods
-    end
-    
-    module ClassMethods
+  class Config
+    class << self
       def init
         yaml = YAML.load(File.open(File.join(RAILS_ROOT, "config", "dj_stats.yml")))
 
@@ -14,6 +10,14 @@ module DjStats
         else
           raise "Incorrect format of dj_stats.yml"
         end
+      end
+    
+      def stats_url
+        @stats_url
+      end
+      
+      def app_name
+        @app_name
       end
     end
   end
