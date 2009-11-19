@@ -2,13 +2,13 @@ module DjStats
   class Config
     class << self
       def init
-        yaml = YAML.load(File.open(File.join(RAILS_ROOT, "config", "dj_stats.yml")))
+        yaml = YAML.load(load_file)
 
         if yaml["dj_stats"]
           @stats_url = yaml["dj_stats"]["stats_url"]
           @app_name  = yaml["dj_stats"]["application_name"]
         else
-          raise "Incorrect format of dj_stats.yml"
+          raise DjStats::Error.new("Incorrect format of dj_stats.yml")
         end
       end
     
@@ -19,6 +19,12 @@ module DjStats
       def app_name
         @app_name
       end
+      
+      private
+        def load_file
+          name = File.join(RAILS_ROOT, "config", "dj_stats.yml")
+          File.open(name) || raise(DjStats::Error.new("Could not open #{name}"))
+        end
     end
   end
 end

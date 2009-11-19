@@ -1,0 +1,3 @@
+dj_stats:
+  application_name: Test App
+  stats_url: http://localhost:3000
