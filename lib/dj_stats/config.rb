@@ -5,7 +5,7 @@ module DjStats
         yaml = YAML.load(load_file)
 
         if yaml["dj_stats"]
-          @stats_url = yaml["dj_stats"]["stats_url"]
+          @stats_url = [yaml["dj_stats"]["stats_url"], "jobs"].join('/')
           @app_name  = yaml["dj_stats"]["application_name"]
         else
           raise DjStats::Error.new("Incorrect format of dj_stats.yml")

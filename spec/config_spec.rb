@@ -30,7 +30,7 @@ describe DjStats::Config do
     
     it "should set the stats_url" do
       DjStats::Config.init
-      DjStats::Config.stats_url.should == 'http://localhost:3000'
+      DjStats::Config.stats_url.should == 'http://localhost:3000/jobs'
     end
     
     it "should set the app_name" do

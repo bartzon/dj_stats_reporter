@@ -43,7 +43,7 @@ describe DjStats::Reporter do
     end
     
     it "should call the correct method with the correct arguments" do
-      DjStats::Reporter.should_receive(:post).with("http://localhost:3000/", :body => {:job => @attrs})
+      DjStats::Reporter.should_receive(:post).with("http://localhost:3000/jobs/", :body => {:job => @attrs})
       do_register
     end
     
@@ -64,7 +64,7 @@ describe DjStats::Reporter do
     it "should call the correct method with the correct arguments" do
       Time.stub!(:now).and_return Time.utc(2009,1,1)
       attrs = @attrs.dup.merge!(:started_at => Time.utc(2009,1,1))
-      DjStats::Reporter.should_receive(:put).with("http://localhost:3000/3", :body => {:job => attrs})
+      DjStats::Reporter.should_receive(:put).with("http://localhost:3000/jobs/3", :body => {:job => attrs})
       do_start
     end
     
@@ -85,7 +85,7 @@ describe DjStats::Reporter do
     it "should call the correct method with the correct arguments" do
       Time.stub!(:now).and_return Time.utc(2009,1,1)
       attrs = @attrs.dup.merge!(:ended_at => Time.utc(2009,1,1))
-      DjStats::Reporter.should_receive(:delete).with("http://localhost:3000/3", :body => {:job => attrs})
+      DjStats::Reporter.should_receive(:delete).with("http://localhost:3000/jobs/3", :body => {:job => attrs})
       do_end
     end
     
@@ -97,7 +97,7 @@ describe DjStats::Reporter do
   describe "rescheduling a job" do
     it "should call the correct method with the correct attributes" do
       attrs = @attrs.dup.merge!(:started_at => nil)
-      DjStats::Reporter.should_receive(:put).with("http://localhost:3000/3", :body => {:job => attrs})
+      DjStats::Reporter.should_receive(:put).with("http://localhost:3000/jobs/3", :body => {:job => attrs})
       DjStats::Reporter.reschedule_job(@job)
     end
   end
@@ -117,7 +117,7 @@ describe DjStats::Reporter do
       attrs = @attrs.dup
       attrs.merge!(:ended_at => @t)
       attrs.merge!(:failed_at => @t)
-      DjStats::Reporter.should_receive(:put).with("http://localhost:3000/3", :body => {:job => attrs})
+      DjStats::Reporter.should_receive(:put).with("http://localhost:3000/jobs/3", :body => {:job => attrs})
       do_fail
     end
     
