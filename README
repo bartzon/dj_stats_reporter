@@ -1,0 +1,17 @@
+DJ Stats
+========
+
+After seeing the Github guys release Resque, I wanted the same monitoring functionality for Delayed Job. So, DJ Stats was born. It hooks into the lifecycle of a Delayed::Job, and reports data back to DJ Stats. This plugin is the reporter part, for the monitoring application see http://github.com/bartzon/dj_stats
+
+Installation:
+-------------
+Install the plugin with:
+
+	./script/plugin install git://github.com/bartzon/dj_stats_reporter.git
+
+Create a file called dj_stats.yml in RAILS_ROOT/config with the following format:
+
+	dj_stats:
+  	application_name: Application name
+  	stats_url: URL to the DJ Stats app
+
