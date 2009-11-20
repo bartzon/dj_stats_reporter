@@ -75,7 +75,7 @@ describe DjStats::Reporter do
   
   describe "ending a job" do
     before(:each) do
-      DjStats::Reporter.stub!(:put).and_return true   
+      DjStats::Reporter.stub!(:delete).and_return true   
     end
     
     def do_end
@@ -104,6 +104,7 @@ describe DjStats::Reporter do
   
   describe "failing a job" do
     before(:each) do
+      DjStats::Reporter.stub!(:put)
       @t = Time.utc(2009,1,1)
       Time.stub!(:now).and_return @t
     end
